@@ -1,8 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import properties from "../data/properties";
+import { useProperties } from "../context/PropertyContext";
 
 function PropertyDetails() {
+  const { properties } = useProperties();
 
   const { id } = useParams();
 

@@ -13,11 +13,18 @@ import PropertyDetails from "./pages/PropertyDetails";
 
 import propertiesData from "./data/properties";
 
+import AdminDashboard from "./admin/AdminDashboard";
+import AddProperty from "./admin/AddProperty";
+import EditProperty from "./admin/EditProperty";
+import { useProperties } from "./context/PropertyContext";
+
 function HomePage() {
   const { darkMode } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [priceRange, setPriceRange] = useState("");
+
+  const { properties } = useProperties();
 
   const filteredProperties = propertiesData.filter((property) => {
 
@@ -83,6 +90,21 @@ function App() {
           path="/property/:id"
           element={<PropertyDetails />}
         />
+
+        <Route
+  path="/admin"
+  element={<AdminDashboard />}
+/>
+
+<Route
+  path="/admin/add-property"
+  element={<AddProperty />}
+/>
+
+<Route
+  path="/admin/edit-property/:id"
+  element={<EditProperty />}
+/>
 
       </Routes>
 
