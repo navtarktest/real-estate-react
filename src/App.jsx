@@ -18,6 +18,9 @@ import AddProperty from "./admin/AddProperty";
 import EditProperty from "./admin/EditProperty";
 import { useProperties } from "./context/PropertyContext";
 
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function HomePage() {
   const { darkMode } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,20 +96,39 @@ function App() {
 
         <Route
   path="/admin"
-  element={<AdminDashboard />}
+  element={
+    <ProtectedRoute>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
 />
 
 <Route
   path="/admin/add-property"
-  element={<AddProperty />}
+  element={
+    <ProtectedRoute>
+      <AddProperty />
+    </ProtectedRoute>
+  }
 />
 
 <Route
   path="/admin/edit-property/:id"
-  element={<EditProperty />}
+  element={
+    <ProtectedRoute>
+      <EditProperty />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/login"
+  element={<Login />}
 />
 
       </Routes>
+
+      
 
     </BrowserRouter>
   );

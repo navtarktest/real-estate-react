@@ -1,4 +1,13 @@
 import React from "react";
+import {
+  signOut,
+} from "firebase/auth";
+
+import {
+  useNavigate,
+} from "react-router-dom";
+
+import { auth } from "../firebase";
 import { Link } from "react-router-dom";
 import { useProperties } from "../context/PropertyContext";
 
@@ -8,6 +17,24 @@ const {
   properties,
   deleteProperty,
 } = useProperties();
+
+const navigate = useNavigate();
+
+const handleLogout = async () => {
+
+  try {
+
+    await signOut(auth);
+
+    alert("Logout Successful!");
+
+    navigate("/login");
+
+  } catch (error) {
+
+    alert(error.message);
+  }
+};
 
 
   return (
@@ -35,6 +62,13 @@ const {
           >
             Add Property
           </Link>
+
+          <button
+  onClick={handleLogout}
+  className="text-left hover:text-red-400 transition"
+>
+  Logout
+</button>
 
         </nav>
 
