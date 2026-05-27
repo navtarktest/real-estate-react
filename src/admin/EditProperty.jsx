@@ -20,7 +20,7 @@ function EditProperty() {
 
   // Find Property
   const property = properties.find(
-    (item) => item.id === parseInt(id)
+    (item) => item.id === id
   );
 
   const [imagePreview, setImagePreview] =
@@ -45,11 +45,21 @@ function EditProperty() {
     });
   };
 
-  const handleImageUpload = (e) => {
+const handleImageUpload = (e) => {
 
   const file = e.target.files[0];
 
   if (!file) return;
+
+  // LIMIT SIZE
+  if (file.size > 900000) {
+
+    alert(
+      "Image too large. Please upload image below 900KB."
+    );
+
+    return;
+  }
 
   const reader = new FileReader();
 
@@ -59,7 +69,6 @@ function EditProperty() {
 
     setImagePreview(imageBase64);
 
-    // IMPORTANT FIX
     setFormData((prev) => ({
       ...prev,
       image: imageBase64,

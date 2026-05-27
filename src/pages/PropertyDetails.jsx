@@ -8,7 +8,7 @@ function PropertyDetails() {
   const { id } = useParams();
 
   const property = properties.find(
-    (item) => item.id === parseInt(id)
+    (item) => item.id === id
   );
 
   if (!property) {

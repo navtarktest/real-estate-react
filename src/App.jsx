@@ -11,8 +11,6 @@ import { useTheme } from "./context/ThemeContext";
 
 import PropertyDetails from "./pages/PropertyDetails";
 
-import propertiesData from "./data/properties";
-
 import AdminDashboard from "./admin/AdminDashboard";
 import AddProperty from "./admin/AddProperty";
 import EditProperty from "./admin/EditProperty";
@@ -29,7 +27,7 @@ function HomePage() {
 
   const { properties } = useProperties();
 
-  const filteredProperties = propertiesData.filter((property) => {
+  const filteredProperties = properties.filter((property) => {
 
     const matchesSearch =
       property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

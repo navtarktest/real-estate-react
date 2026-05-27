@@ -25,22 +25,34 @@ function AddProperty() {
     });
   };
 
-  const handleImageUpload = (e) => {
+const handleImageUpload = (e) => {
 
   const file = e.target.files[0];
 
   if (!file) return;
 
+  // LIMIT SIZE
+  if (file.size > 900000) {
+
+    alert(
+      "Image too large. Please upload image below 900KB."
+    );
+
+    return;
+  }
+
   const reader = new FileReader();
 
   reader.onloadend = () => {
 
-    setImagePreview(reader.result);
+    const imageBase64 = reader.result;
 
-    setFormData({
-      ...formData,
-      image: reader.result,
-    });
+    setImagePreview(imageBase64);
+
+    setFormData((prev) => ({
+      ...prev,
+      image: imageBase64,
+    }));
   };
 
   reader.readAsDataURL(file);

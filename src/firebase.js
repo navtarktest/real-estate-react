@@ -4,6 +4,10 @@ import {
   getAuth,
 } from "firebase/auth";
 
+import {
+  getFirestore,
+} from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCLxaPPGItgbuQlYU_j4Dqf8s_3NLWYlFA",
   authDomain: "real-estate-react-1be93.firebaseapp.com",
@@ -17,3 +21,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
+
+export const db = getFirestore(app);

@@ -5,86 +5,125 @@ import {
   useState,
 } from "react";
 
-import propertiesData from "../data/properties";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+
+import { db } from "../firebase";
 
 const PropertyContext = createContext();
 
 export function PropertyProvider({ children }) {
 
-  // Load Data
-  const [properties, setProperties] = useState(() => {
+  const [properties, setProperties] =
+    useState([]);
 
-    const savedProperties =
-      localStorage.getItem("properties");
+  // FETCH PROPERTIES
+  const fetchProperties = async () => {
 
-    return savedProperties
-      ? JSON.parse(savedProperties)
-      : propertiesData;
-  });
+    try {
 
-  // Save To LocalStorage
+      const querySnapshot =
+        await getDocs(
+          collection(db, "properties")
+        );
+
+      const propertyList =
+        querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+      setProperties(propertyList);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+  // LOAD DATA
   useEffect(() => {
 
-    localStorage.setItem(
-      "properties",
-      JSON.stringify(properties)
-    );
+    fetchProperties();
 
-  }, [properties]);
+  }, []);
 
-  // Add Property
-  const addProperty = (newProperty) => {
+  // ADD PROPERTY
+  const addProperty = async (newProperty) => {
 
-    setProperties([
-      ...properties,
-      {
-        ...newProperty,
-        id: Date.now(),
-      },
-    ]);
-  };
+    try {
 
-  // Delete Property
-  const deleteProperty = (id) => {
-
-    const updatedProperties =
-      properties.filter(
-        (property) => property.id !== id
+      await addDoc(
+        collection(db, "properties"),
+        newProperty
       );
 
-    setProperties(updatedProperties);
+      fetchProperties();
+
+    } catch (error) {
+
+      console.log(error);
+    }
   };
 
-  const updateProperty = (updatedProperty) => {
+  // DELETE PROPERTY
+  const deleteProperty = async (id) => {
 
-  const updatedProperties = properties.map(
-    (property) => {
+    try {
 
-      if (property.id === updatedProperty.id) {
+      await deleteDoc(
+        doc(db, "properties", id)
+      );
 
-        return {
-          ...property,
-          ...updatedProperty,
-          image:
-            updatedProperty.image || property.image,
-        };
-      }
+      fetchProperties();
 
-      return property;
+    } catch (error) {
+
+      console.log(error);
     }
-  );
+  };
 
-  setProperties(updatedProperties);
-};
+  // UPDATE PROPERTY
+  const updateProperty = async (
+    updatedProperty
+  ) => {
+
+    try {
+
+      const propertyRef =
+        doc(
+          db,
+          "properties",
+          updatedProperty.id
+        );
+
+      await updateDoc(
+        propertyRef,
+        updatedProperty
+      );
+
+      fetchProperties();
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
 
   return (
     <PropertyContext.Provider
       value={{
-    properties,
-    addProperty,
-    deleteProperty,
-    updateProperty,
-    }}
+        properties,
+        addProperty,
+        deleteProperty,
+        updateProperty,
+      }}
     >
       {children}
     </PropertyContext.Provider>
@@ -92,5 +131,6 @@ export function PropertyProvider({ children }) {
 }
 
 export function useProperties() {
+
   return useContext(PropertyContext);
 }
